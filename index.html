@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Index</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+@import url('https://fonts.cdnfonts.com/css/dot-matrix');
+        body {
+            font-family: "Times New Roman",Arial, sans-serif;
+            background-color: #f8f9fa; /* Light background for screen */
+            color: #000;
+        }
+  .watermark{
+    display: none;
+    font-family: "Dot Matrix";
+  }
+        @media print {
+
+            @page {
+                size: A4;
+                margin: 2cm 1.5cm 1.5cm 3cm;
+            }
+
+            body, #printable-index {
+                background-color: white !important;
+                color: black !important;
+                box-shadow: none !important;
+                font-family: "Times New Roman" !important;
+            }
+            * {
+                box-shadow: none !important;
+                text-shadow: none !important;
+                background: transparent !important;
+            }
+
+            #input-form, #print-button-container {
+                display: none !important;
+            }
+
+            #printable-index {
+                display: block !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+         .print-h-16 { /* Tribhuvan University */
+                font-size: 13pt;
+                line-height: 1.2;
+            }
+            .print-h-20 { 
+                font-size: 18pt;
+                font-weight: bold;
+                line-height: 1.2;
+            }
+            .print-h-18 { 
+                font-size: 18pt;
+                font-weight: bold;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+            .print-h-address {
+                font-size: 10pt;
+                margin-bottom: 20px;
+            }
+          .watermark{
+            display: block;
+            width:100%;
+            text-align: right;
+            font-size: 7.5pt;
+            font-family: "Dot Matrix";
+          }
+
+            .print-body-14 {
+                font-size: 15pt;
+                font-weight: normal;
+            }
+
+
+            .print-table {
+                font-size: 13pt; 
+                width: 100%;
+                border-collapse: collapse !important; 
+                table-layout: fixed; 
+            }
+
+            .print-table th, .print-table td {
+                border: 1px solid #000 !important;
+                padding: 4px;
+                vertical-align: top;
+                min-height: 40px; 
+                height: 40px; 
+            }
+
+            .print-table thead th {
+                font-weight: bold;
+                background-color: white !important; 
+            }
+            .print-table tbody td{
+              min-height: 3.65cm;
+              
+            }
+
+
+            .exp-no-col { width: 8%; text-align: center; }
+            .name-col { width: 52%; } 
+            .date-col { width: 20%; text-align: center; }
+            .remarks-col { width: 20%; text-align: center; }
+        }
+
+
+        .form-container {
+            max-width: 550px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+
+
+        #printable-index {
+            display: none;
+            max-width: 800px; 
+            margin-top: 20px;
+            padding: 40px;
+            background-color: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+    </style>
+</head>
+<body>
+
+
+    <div id="input-form" class="container form-container">
+        <h1 class="text-dark mb-4 border-bottom pb-2">Phyics Index</h1>
+        <p class="text-muted mb-4">Enter details to generate the printable Index. It will be styled for A4 black & white printing.</p>
+
+        <div class="mb-3">
+            <label for="student-name" class="form-label fw-bold">Student Name</label>
+            <input type="text" id="student-name" class="form-control" placeholder="E.g., Your Name Here">
+        </div>
+        <div class="mb-4">
+            <label for="roll-no" class="form-label fw-bold">Roll No.</label>
+            <input type="text" id="roll-no" class="form-control" placeholder="E.g., 123">
+        </div>
+        
+        <button onclick="generateIndex()" class="btn btn-dark w-100 py-2">
+            Generate Printable Index
+        </button>
+    </div>
+
+
+    <div id="printable-index" class="container-fluid">
+        <div class="watermark">&copy;coderGrb</div>
+        <!-- Header -->
+        <header class="text-center pt-3 pb-4">
+            <h2 class="print-h-16 mb-0">Tribhuvan University</h2>
+            <h2 class="print-h-20 mb-0">Birendra Multiple Campus</h2>
+            <p class="print-h-address mb-0">Bharatpur, Chitwan, Nepal</p>
+            
+            <h1 class="print-h-18 mt-3 mb-4">Physics Practical Index</h1>
+        </header>
+
+        <!-- Student Details -->
+        <div class="d-flex justify-content-between print-body-14 px-1 mb-4" style="line-height: 1.5;">
+            <p class="mb-0"><strong>Name:</strong> <span id="display-name" class="text-decoration-bold"></span></p>
+            <p class="mb-0"><strong>Roll No:</strong> <span id="display-roll-no" class="text-decoration-bold"></span></p>
+            <p class="mb-0"><strong>Year:</strong> <span class="text-decoration-bold">II</span></p>
+        </div>
+
+        <!-- Practical Table -->
+        <table id="practical-table" class="print-table">
+            <thead>
+                <tr>
+                    <th class="exp-no-col">Exp No.</th>
+                    <th class="name-col text-start">Name of Experiment</th>
+                    <th class="date-col">Date of Experiment</th>
+                    <th class="remarks-col">Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table rows will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- Print Button Container -->
+    <div id="print-button-container" class="container text-center mt-5 mb-5" style="display: none;">
+        <button onclick="printPage()" class="btn btn-lg btn-success shadow-lg">
+            Print / Save as PDF
+        </button>
+        <button onclick="resetApp()" class="btn btn-lg btn-outline-dark ms-3 shadow-lg">
+            Edit Details
+        </button>
+    </div>
+
+    <script>
+
+        const practicalExperiments = [
+            "To Determine the Refractive Index of the Material of a Prism Using a Spectrometer",
+            "To Determine the Wavelength of Given Source of Light (Sodium Light) Using Newton's Rings Method.",
+            "To Determine the Wave Length of Given Source of Light (Sodium Light) Using a Plane Diffraction Grating",
+            "To Study the Forward and Reverse Characteristics of PN-Junction Diode",
+            "To Study the Characteristics of Regulated Power Supply Using Zener Diode",
+            "To Study the Logic Gates OR, AND & NOT by Using DTL and TTL.",
+            "To Determine the Specific Rotation of Sugar Solution Using Laurent Half- Shade Polarimeter.",
+            "To Determine the Refractive Index of the Material of a Prism For Light of Different Wavelengths.",
+            "To Study the Characteristics of Geiger Müller (G.M.) Counter and Its Reliability.",
+            "To Determine the Resonant Frequency and Quality Factor of Parallel LCR Circuit.",
+            "To Study the CB Characteristics of PNP and NPN Junction Transistor.",
+            "To Study the CE Characteristics of PNP and NPN Junction Transistor.",
+            "To Study the CC Characteristics of PNP and NPN Junction Transistor.",
+            "To Study the Logic Gates NOR and NAND Using DTL and TTL.",
+            "To Verify NAND and NOR Gates are Universal Gates.",
+        ];
+        
+        function populateTable() {
+            const tbody = document.querySelector('#practical-table tbody');
+            tbody.innerHTML = ''; 
+            
+            practicalExperiments.forEach((experiment, index) => {
+                const row = tbody.insertRow();
+                
+                
+                const expNoCell = row.insertCell();
+                expNoCell.textContent = index + 1;
+                expNoCell.classList.add('exp-no-col');
+
+                
+                const nameCell = row.insertCell();
+                nameCell.textContent = experiment;
+                nameCell.classList.add('name-col');
+
+                
+                const dateCell = row.insertCell();
+                dateCell.classList.add('date-col');
+
+                
+                const remarksCell = row.insertCell();
+                remarksCell.classList.add('remarks-col');
+            });
+        }
+        
+        function generateIndex() {
+            const nameInput = document.getElementById('student-name').value.trim();
+            const rollNoInput = document.getElementById('roll-no').value.trim();
+
+            if (!nameInput || !rollNoInput) {
+
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'alert alert-danger fixed-top mx-auto mt-3 w-50 text-center';
+                errorMessage.textContent = 'Please enter both your Name and Roll No.';
+                document.body.prepend(errorMessage);
+                setTimeout(() => errorMessage.remove(), 3000);
+                return;
+            }
+
+            
+            document.getElementById('display-name').textContent = nameInput;
+            document.getElementById('display-roll-no').textContent = rollNoInput;
+
+          
+            populateTable();
+
+            
+            document.getElementById('input-form').style.display = 'none';
+            document.getElementById('printable-index').style.display = 'block';
+            document.getElementById('print-button-container').style.display = 'block';
+
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function printPage() {
+            window.print();
+        }
+
+        function resetApp() {
+             document.getElementById('input-form').style.display = 'block';
+             document.getElementById('printable-index').style.display = 'none';
+             document.getElementById('print-button-container').style.display = 'none';
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
